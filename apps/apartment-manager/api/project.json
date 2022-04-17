@@ -1,0 +1,52 @@
+{
+  "root": "apps/apartment-manager/api",
+  "sourceRoot": "apps/apartment-manager/api/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/node:webpack",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/apartment-manager/api",
+        "main": "apps/apartment-manager/api/src/main.ts",
+        "tsConfig": "apps/apartment-manager/api/tsconfig.app.json",
+        "assets": ["apps/apartment-manager/api/src/assets"]
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "fileReplacements": [
+            {
+              "replace": "apps/apartment-manager/api/src/environments/environment.ts",
+              "with": "apps/apartment-manager/api/src/environments/environment.prod.ts"
+            }
+          ]
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/node:node",
+      "options": {
+        "buildTarget": "apartment-manager-api:build"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/apartment-manager/api/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/apps/apartment-manager/api"],
+      "options": {
+        "jestConfig": "apps/apartment-manager/api/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

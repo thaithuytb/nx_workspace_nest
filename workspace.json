@@ -1,0 +1,6 @@
+{
+  "version": 2,
+  "projects": {
+    "apartment-manager-api": "apps/apartment-manager/api"
+  }
+}
