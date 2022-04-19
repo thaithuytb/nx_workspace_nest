@@ -1,0 +1,23 @@
+{
+  "root": "libs/users",
+  "sourceRoot": "libs/users/src",
+  "projectType": "libraly",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/users/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/users"],
+      "options": {
+        "jestConfig": "libs/users/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

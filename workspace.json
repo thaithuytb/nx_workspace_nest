@@ -1,6 +1,10 @@
 {
   "version": 2,
   "projects": {
-    "apartment-manager-api": "apps/apartment-manager/api"
+    "apartment-manager-api": "apps/apartment-manager/api",
+    "pet": "libs/pet",
+    "petstore": "apps/petstore",
+    "rooms": "libs/rooms",
+    "users": "libs/users"
   }
 }

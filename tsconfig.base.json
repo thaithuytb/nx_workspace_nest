@@ -14,7 +14,11 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@aichi/pet": ["libs/pet/src/index.ts"],
+      "@aichi/rooms": ["libs/rooms/src/index.ts"],
+      "@aichi/users": ["libs/users/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
