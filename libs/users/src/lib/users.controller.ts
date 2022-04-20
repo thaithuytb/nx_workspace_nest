@@ -8,120 +8,131 @@ import {
   Put,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/user-create.dto';
-import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
-
+import { CreateUserDto } from './dto/createUserDto';
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
+@ApiTags('user')
 @Controller('user')
 export class UsersController {
-  constructor(
-    private usersSerive: UsersService,
-  ) {}
+  constructor(private usersSerive: UsersService) {}
+
+  // --------------------------------------------------------
 
   @ApiOperation({
-    summary: 'Creates list of array with given input array'
+    summary: 'Creates list of array with given input array',
   })
   @ApiBody({
     type: [CreateUserDto],
-    description: 'List of user object'
+    description: 'List of user object',
   })
   @ApiBody({
     description: 'Created list of user Object',
-    type: CreateUserDto
+    type: CreateUserDto,
   })
   @ApiCreatedResponse({
-    description: 'User created successfully'
+    description: 'User created successfully',
   })
   @ApiBadRequestResponse({
-    description: 'Invalid user supplied'
+    description: 'Invalid user supplied',
   })
   @Post('createWithArray')
   createUserWithArray(@Body() body: CreateUserDto[]) {
     return `Create users by array ${body}`;
   }
-///////////////
+  // --------------------------------------------------------
   @ApiOperation({
-    summary: 'Get user by username'
+    summary: 'Get an user by username',
   })
   @ApiParam({
     name: 'username',
     type: String,
-    description: 'The name that needs to be fetched'
+    description: 'The name that needs to be fetched',
   })
   @ApiOkResponse({
     description: 'Successful operation',
-    type: CreateUserDto
+    type: CreateUserDto,
   })
   @ApiBadRequestResponse({
-    description: 'Invalid username supplied'
+    description: 'Invalid username supplied',
   })
   @ApiNotFoundResponse({
-    description: 'User not found'
+    description: 'User not found',
   })
   @Get(':username')
   getUserByUsername(@Param() params) {
     return `Get user by username ${params.username}`;
   }
-///////////
+  // --------------------------------------------------------
   @ApiOperation({
-    summary: 'Updated user'
+    summary: 'Update user',
   })
   @ApiParam({
     name: 'username',
     type: String,
-    description: 'Name that needs to be updated'
+    description: 'Name that needs to be updated',
   })
   @ApiBody({
-    description: 'Updated user object',
-    type: CreateUserDto
+    description: 'User object for update',
+    type: CreateUserDto,
   })
   @ApiOkResponse({
-    description: 'Updated user'
+    description: 'Updated user data',
   })
   @ApiBadRequestResponse({
-    description: 'Invalid username supplied'
+    description: 'Invalid username supplied',
   })
   @ApiNotFoundResponse({
-    description: 'User not found'
+    description: 'User not found',
   })
   @Put(':username')
   putUserByUsername(@Body() body: CreateUserDto, @Param() username) {
     return `user has named ${username} change === ${body}`;
   }
-/////////////
+
+  // --------------------------------------------------------
+
   @ApiOperation({
-    summary: 'Delete user by username'
+    summary: 'Delete user by username',
   })
   @ApiParam({
     name: 'username',
     type: String,
-    description: 'The name that needs to be deleted'
+    description: 'The name that needs to be deleted',
   })
   @ApiOkResponse({
-    description: 'Deleted user'
+    description: 'Deleted user',
   })
   @ApiBadRequestResponse({
-    description: 'Invalid username supplied'
+    description: 'Invalid username supplied',
   })
   @ApiNotFoundResponse({
-    description: 'User not found'
+    description: 'User not found',
   })
   @Delete(':username')
   deleteUserByUsername(@Param() params) {
     return `Delete user by username ${params.username}`;
   }
-//////////////
+  // --------------------------------------------------------
   @ApiOperation({
-    summary: 'Created user'
+    summary: 'Create an user',
   })
   @ApiBody({
-    description: 'Created user Object',
-    type: CreateUserDto
+    description: 'Creating user object',
+    type: CreateUserDto,
   })
   @ApiCreatedResponse({
-    description: 'User created successfully'
+    description: 'User was created successfully',
   })
   @ApiBadRequestResponse({
-    description: 'Invalid user supplied'
+    description: 'Invalid user supplied',
   })
   @Post()
   createUser(@Body() createUserDto: CreateUserDto) {
