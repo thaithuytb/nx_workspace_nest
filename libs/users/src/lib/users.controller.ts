@@ -1,22 +1,31 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
+  NotFoundException,
   Param,
+  ParseIntPipe,
   Post,
   Put,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/user-create.dto';
-import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { User } from './interfaces/user.interface';
+import { UserEntity } from './interfaces/userEntity';
+import { UsernameDto } from './dto/username-param.dto';
 
 @Controller('user')
+@ApiTags('user')
 export class UsersController {
   constructor(
     private usersSerive: UsersService,
   ) {}
-
+  //----------------create user with array ----------------------
   @ApiOperation({
     summary: 'Creates list of array with given input array'
   })
@@ -24,10 +33,10 @@ export class UsersController {
     type: [CreateUserDto],
     description: 'List of user object'
   })
-  @ApiBody({
-    description: 'Created list of user Object',
-    type: CreateUserDto
-  })
+  // @ApiBody({
+  //   description: 'Created list of user Object',
+  //   type: CreateUserDto
+  // })
   @ApiCreatedResponse({
     description: 'User created successfully'
   })
@@ -38,18 +47,18 @@ export class UsersController {
   createUserWithArray(@Body() body: CreateUserDto[]) {
     return `Create users by array ${body}`;
   }
-///////////////
+  //----------------get user ----------------------
   @ApiOperation({
     summary: 'Get user by username'
   })
   @ApiParam({
     name: 'username',
-    type: String,
+    type: UsernameDto,
     description: 'The name that needs to be fetched'
   })
   @ApiOkResponse({
     description: 'Successful operation',
-    type: CreateUserDto
+    type: UserEntity
   })
   @ApiBadRequestResponse({
     description: 'Invalid username supplied'
@@ -58,10 +67,14 @@ export class UsersController {
     description: 'User not found'
   })
   @Get(':username')
-  getUserByUsername(@Param() params) {
-    return `Get user by username ${params.username}`;
+  getUserByUsername(@Param() params: UsernameDto): User{
+    const user = this.usersSerive.findUserByUsername(params.username);
+    if (!user) {
+      throw new NotFoundException();
+    }
+    return user;
   }
-///////////
+  //----------------update user ----------------------
   @ApiOperation({
     summary: 'Updated user'
   })
@@ -87,7 +100,7 @@ export class UsersController {
   putUserByUsername(@Body() body: CreateUserDto, @Param() username) {
     return `user has named ${username} change === ${body}`;
   }
-/////////////
+  //----------------delete user----------------------
   @ApiOperation({
     summary: 'Delete user by username'
   })
@@ -106,10 +119,14 @@ export class UsersController {
     description: 'User not found'
   })
   @Delete(':username')
-  deleteUserByUsername(@Param() params) {
-    return `Delete user by username ${params.username}`;
+  deleteUserByUsername(@Param('username') username: string) {
+    const user = this.usersSerive.deleteUserByUsername(username);
+    if (!user) {
+      throw new NotFoundException();
+    }
+    throw new HttpException('delete user successfully', HttpStatus.OK);
   }
-//////////////
+  //----------------create user ----------------------
   @ApiOperation({
     summary: 'Created user'
   })
@@ -118,13 +135,42 @@ export class UsersController {
     type: CreateUserDto
   })
   @ApiCreatedResponse({
-    description: 'User created successfully'
+    description: 'User created successfully',
+    type: UserEntity
   })
   @ApiBadRequestResponse({
     description: 'Invalid user supplied'
   })
   @Post()
-  createUser(@Body() createUserDto: CreateUserDto) {
-    return createUserDto;
+  createUser(@Body() createUserDto: CreateUserDto):User {
+    const createUser = this.usersSerive.createUser(createUserDto);
+    if (!createUser) {
+      throw new BadRequestException();
+    }
+    return createUser;
+  }
+  //----------------get user by id ----------------------
+  @ApiOperation({
+    summary: 'get user by ID'
+  })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Id of user Object'
+  })
+  @ApiOkResponse({
+    description: 'user Object',
+    type: UserEntity
+  })
+  @ApiNotFoundResponse({
+    description: 'user not found'
+  })
+  @Get('id/:id')
+  getUserById (@Param('id', ParseIntPipe) id: number): User {
+    const user = this.usersSerive.findUserById(id);
+    if (!user) {
+      throw new NotFoundException();
+    }
+    return user;
   }
 }
