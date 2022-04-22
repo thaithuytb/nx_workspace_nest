@@ -4,6 +4,7 @@ import {
   IsNotEmpty,
   IsPhoneNumber,
   IsInt,
+  MinLength,
 } from 'class-validator';
 export class CreateUserDto {
   @ApiProperty({
@@ -53,18 +54,19 @@ export class CreateUserDto {
     maxLength: 64,
     format: 'password',
   })
+  @MinLength(8)
   @IsNotEmpty()
   password: string;
 
-  @ApiProperty({
-    description: 'Phone number of user',
-    required: true,
-    minLength: 8,
-    maxLength: 20,
-    format: 'phone',
-  })
-  @IsPhoneNumber()
-  phone: string;
+  // @ApiProperty({
+  //   description: 'Phone number of user',
+  //   required: true,
+  //   minLength: 8,
+  //   maxLength: 20,
+  //   format: 'phone',
+  // })
+  // @IsPhoneNumber()
+  // phone: string;
 
   @ApiProperty({
     description: ' Status of user',

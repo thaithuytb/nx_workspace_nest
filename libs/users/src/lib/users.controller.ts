@@ -18,6 +18,7 @@ import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiNotFoundResponse
 import { User } from './interfaces/user.interface';
 import { UserEntity } from './interfaces/userEntity';
 import { UsernameDto } from './dto/username-param.dto';
+import { ApiResponse } from './interfaces/apiResponse';
 
 @Controller('user')
 @ApiTags('user')
@@ -53,7 +54,7 @@ export class UsersController {
   })
   @ApiParam({
     name: 'username',
-    type: UsernameDto,
+    type: String,
     description: 'The name that needs to be fetched'
   })
   @ApiOkResponse({
@@ -80,7 +81,7 @@ export class UsersController {
   })
   @ApiParam({
     name: 'username',
-    type: String,
+    type: UsernameDto,
     description: 'Name that needs to be updated',
   })
   @ApiBody({
@@ -140,6 +141,7 @@ export class UsersController {
   })
   @ApiBadRequestResponse({
     description: 'Invalid user supplied',
+    type: ApiResponse
   })
   @Post()
   createUser(@Body() createUserDto: CreateUserDto):User {
