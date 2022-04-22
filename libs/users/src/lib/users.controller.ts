@@ -27,21 +27,21 @@ export class UsersController {
   ) {}
   //----------------create user with array ----------------------
   @ApiOperation({
-    summary: 'Creates list of array with given input array'
-  })
-  @ApiBody({
-    type: [CreateUserDto],
-    description: 'List of user object'
+    summary: 'Creates list of array with given input array',
   })
   // @ApiBody({
-  //   description: 'Created list of user Object',
-  //   type: CreateUserDto
+  //   type: [CreateUserDto],
+  //   description: 'List of user object',
   // })
+  @ApiBody({
+    description: 'Created list of user Object',
+    type: [CreateUserDto]
+  })
   @ApiCreatedResponse({
-    description: 'User created successfully'
+    description: 'User created successfully',
   })
   @ApiBadRequestResponse({
-    description: 'Invalid user supplied'
+    description: 'Invalid user supplied',
   })
   @Post('createWithArray')
   createUserWithArray(@Body() body: CreateUserDto[]) {
@@ -49,7 +49,7 @@ export class UsersController {
   }
   //----------------get user ----------------------
   @ApiOperation({
-    summary: 'Get user by username'
+    summary: 'Get an user by username',
   })
   @ApiParam({
     name: 'username',
@@ -61,10 +61,10 @@ export class UsersController {
     type: UserEntity
   })
   @ApiBadRequestResponse({
-    description: 'Invalid username supplied'
+    description: 'Invalid username supplied',
   })
   @ApiNotFoundResponse({
-    description: 'User not found'
+    description: 'User not found',
   })
   @Get(':username')
   getUserByUsername(@Param() params: UsernameDto): User{
@@ -76,25 +76,25 @@ export class UsersController {
   }
   //----------------update user ----------------------
   @ApiOperation({
-    summary: 'Updated user'
+    summary: 'Update user',
   })
   @ApiParam({
     name: 'username',
     type: String,
-    description: 'Name that needs to be updated'
+    description: 'Name that needs to be updated',
   })
   @ApiBody({
-    description: 'Updated user object',
-    type: CreateUserDto
+    description: 'User object for update',
+    type: CreateUserDto,
   })
   @ApiOkResponse({
-    description: 'Updated user'
+    description: 'Updated user data',
   })
   @ApiBadRequestResponse({
-    description: 'Invalid username supplied'
+    description: 'Invalid username supplied',
   })
   @ApiNotFoundResponse({
-    description: 'User not found'
+    description: 'User not found',
   })
   @Put(':username')
   putUserByUsername(@Body() body: CreateUserDto, @Param() username) {
@@ -102,21 +102,21 @@ export class UsersController {
   }
   //----------------delete user----------------------
   @ApiOperation({
-    summary: 'Delete user by username'
+    summary: 'Delete user by username',
   })
   @ApiParam({
     name: 'username',
     type: String,
-    description: 'The name that needs to be deleted'
+    description: 'The name that needs to be deleted',
   })
   @ApiOkResponse({
-    description: 'Deleted user'
+    description: 'Deleted user',
   })
   @ApiBadRequestResponse({
-    description: 'Invalid username supplied'
+    description: 'Invalid username supplied',
   })
   @ApiNotFoundResponse({
-    description: 'User not found'
+    description: 'User not found',
   })
   @Delete(':username')
   deleteUserByUsername(@Param('username') username: string) {
@@ -128,18 +128,18 @@ export class UsersController {
   }
   //----------------create user ----------------------
   @ApiOperation({
-    summary: 'Created user'
+    summary: 'Create an user',
   })
   @ApiBody({
-    description: 'Created user Object',
-    type: CreateUserDto
+    description: 'Creating user object',
+    type: CreateUserDto,
   })
   @ApiCreatedResponse({
-    description: 'User created successfully',
+    description: 'User was created successfully',
     type: UserEntity
   })
   @ApiBadRequestResponse({
-    description: 'Invalid user supplied'
+    description: 'Invalid user supplied',
   })
   @Post()
   createUser(@Body() createUserDto: CreateUserDto):User {

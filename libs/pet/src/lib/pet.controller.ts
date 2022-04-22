@@ -4,8 +4,7 @@ import { PetService } from './pet.service';
 @ApiTags('pet')
 @Controller('pet')
 export class PetController {
-  constructor(private petService: PetService) {
-  }
+  constructor(private petService: PetService) {}
 
   @Get(':findByStatus')
   getPetByStatus(@Param() params) {
