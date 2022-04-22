@@ -13,7 +13,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/user-create.dto';
+import { CreateUserDto } from './dto/createUserDto';
 import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { User } from './interfaces/user.interface';
 import { UserEntity } from './interfaces/userEntity';
