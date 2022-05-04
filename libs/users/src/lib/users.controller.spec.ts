@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  HttpException,
   HttpStatus,
   NotFoundException,
 } from '@nestjs/common';
@@ -25,40 +24,32 @@ describe('UsersController', () => {
     controller = module.get(UsersController);
     service = module.get(UsersService);
   });
-
+//-----------------create user---------------//
   describe('Should be created an user', () => {
     it('Create an user with correct paramaters', () => {
       //input
-
       const mockUser: CreateUserDto = {
         username: 'Thai ngo',
-
         password: '123456',
-      }; //output
-
+      };
+      //output
       const newUser = new UserEntity();
-
       const usersServiceSpyOn = jest
         .spyOn(service, 'createUser')
         .mockImplementation(() => ({
           ...newUser,
-
           ...mockUser,
         }));
-
       expect(controller.createUser(mockUser)).toMatchObject({
         ...newUser,
-
         ...mockUser,
       });
-
       expect(usersServiceSpyOn).toHaveBeenCalledWith(mockUser);
     });
 
     it('Throws an error when username already exists', async () => {
       const mockUserNoUsername = {
         username: 'thai',
-
         password: '123456',
       };
 
@@ -76,8 +67,8 @@ describe('UsersController', () => {
         expect(usersServiceSpyOn).toHaveBeenCalled();
       }
     });
-  }); //get user by id
-
+  });
+//-----------------get user by id---------------//
   describe('Should be get user by id', () => {
     it('Throw an error when dont found user by id', async () => {
       const paramId = 2;
@@ -92,7 +83,6 @@ describe('UsersController', () => {
         expect(error).toBeInstanceOf(NotFoundException);
 
         expect(error.message).toBe('User not found');
-
         expect(usersServiceSpyOnGetUserById).toHaveBeenCalledWith(paramId);
       }
     });
@@ -107,11 +97,10 @@ describe('UsersController', () => {
         .mockImplementation(() => user);
 
       expect(controller.getUserById(idCorrect)).toMatchObject(user);
-
       expect(usersServicesSpyOnGetUserById).toHaveBeenCalled();
     });
   });
-
+//-----------------get user by username---------------//
   describe('Get an user by username', () => {
     it('get an user by username', () => {
       const username = new UsernameDto();
@@ -140,6 +129,7 @@ describe('UsersController', () => {
       }
     });
   });
+//-----------------update an user---------------//
   describe('Update an user', () => {
     it('update an user by username and user object in body of the request', () => {
       const username = 'user123abc';
@@ -176,6 +166,7 @@ describe('UsersController', () => {
       }
     });
   });
+//-----------------delete an user---------------//
   describe('Delete an user', () => {
     it('delete an user by username', () => {
       //input
