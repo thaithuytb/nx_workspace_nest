@@ -30,8 +30,9 @@ async function bootstrap() {
   //validator and transformer
 
   app.useGlobalPipes(new ValidationPipe({
-    transform: true
+    // transform: true
   }))
+
   await app.listen(port);
   Logger.log(
     `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`

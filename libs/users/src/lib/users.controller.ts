@@ -13,12 +13,13 @@ import {
   Put,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/createUserDto';
+// import { CreateUserDto } from './dto/createUserDto';
 import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { User } from './interfaces/user.interface';
 import { UserEntity } from './interfaces/userEntity';
 import { UsernameDto } from './dto/username-param.dto';
 import { ApiResponse } from './interfaces/apiResponse';
+import { CreateUserDto } from './dto/user-create.dto';
 
 @Controller('user')
 @ApiTags('user')
@@ -147,7 +148,7 @@ export class UsersController {
   createUser(@Body() createUserDto: CreateUserDto):User {
     const createUser = this.usersSerive.createUser(createUserDto);
     if (!createUser) {
-      throw new BadRequestException();
+      throw new BadRequestException('Invalid user supplied');
     }
     return createUser;
   }

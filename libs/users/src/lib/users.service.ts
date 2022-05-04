@@ -6,7 +6,7 @@ import { UserEntity } from './interfaces/userEntity';
 
 @Injectable()
 export class UsersService {
-  private readonly users: User[] = [...dataUser];
+  readonly users: User[] = [...dataUser];
 
   findUserByUsername(username: string): User {
       return this.users.find((user) => user.username === username);
@@ -24,18 +24,17 @@ export class UsersService {
     return this.users.find((user) => user.id === id);
   }
 
-  createUser( createUserDto:CreateUserDto): User {
+  createUser( createUserDto:CreateUserDto): User | null {
     const checkUser = this.users.find((user) => user.username === createUserDto.username);
     if (!checkUser) {
       const newUser = new UserEntity();
-      newUser.id = this.users.length;
       newUser.username = createUserDto.username;
       newUser.password = createUserDto.password;
       this.users.push({
         ...newUser,
-        id: this.users.length
       })
       return newUser;
     }
+    return null;
   }
 }

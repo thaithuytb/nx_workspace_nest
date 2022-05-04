@@ -5,6 +5,8 @@ export class UsernameDto {
   @MaxLength(15)
   @IsAlphanumeric()
   @IsString()
-  @ApiProperty()
+  @ApiProperty({
+    example: 'thai'
+  })
   username: string;
 }
