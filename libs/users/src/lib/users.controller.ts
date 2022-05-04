@@ -146,11 +146,11 @@ export class UsersController {
   })
   @Post()
   createUser(@Body() createUserDto: CreateUserDto):User {
-    const createUser = this.usersSerive.createUser(createUserDto);
-    if (!createUser) {
+    const newUser = this.usersSerive.createUser(createUserDto);
+    if (!newUser) {
       throw new BadRequestException('Invalid user supplied');
     }
-    return createUser;
+    return newUser;
   }
   //----------------get user by id ----------------------
   @ApiOperation({
@@ -172,7 +172,7 @@ export class UsersController {
   getUserById (@Param('id', ParseIntPipe) id: number): User {
     const user = this.usersSerive.findUserById(id);
     if (!user) {
-      throw new NotFoundException();
+      throw new NotFoundException('User not found');
     }
     return user;
   }
