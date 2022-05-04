@@ -26,49 +26,93 @@ describe('UsersController', () => {
     service = module.get(UsersService);
   });
 
-  describe('should be created an user', () => {
-    it('create an user with correct paramaters', () => {
+  describe('Should be created an user', () => {
+    it('Create an user with correct paramaters', () => {
       //input
+
       const mockUser: CreateUserDto = {
         username: 'Thai ngo',
+
         password: '123456',
-      };
-      //output
+      }; //output
+
       const newUser = new UserEntity();
 
-      const mockSpyOn = jest
+      const usersServiceSpyOn = jest
         .spyOn(service, 'createUser')
         .mockImplementation(() => ({
           ...newUser,
+
           ...mockUser,
         }));
 
       expect(controller.createUser(mockUser)).toMatchObject({
         ...newUser,
+
         ...mockUser,
       });
-      expect(mockSpyOn).toBeCalledWith(mockUser);
+
+      expect(usersServiceSpyOn).toHaveBeenCalledWith(mockUser);
     });
-    it('throws an error when no username is provided', async () => {
+
+    it('Throws an error when username already exists', async () => {
       const mockUserNoUsername = {
-        username: '',
+        username: 'thai',
+
         password: '123456',
       };
+
+      const usersServiceSpyOn = jest
+        .spyOn(service, 'createUser')
+        .mockImplementation(() => null);
+
       try {
-        await expect(controller.createUser(mockUserNoUsername));
+        await controller.createUser(mockUserNoUsername);
       } catch (error) {
         expect(error).toBeInstanceOf(BadRequestException);
-        expect(error.message).toBe(
-          'username must contain only letters and numbers'
-        );
+
+        expect(error.message).toBe('Invalid user supplied');
+
+        expect(usersServiceSpyOn).toHaveBeenCalled();
       }
     });
-    it('throws an error when username already exists', () => {
-      console.log('abc');
+  }); //get user by id
+
+  describe('Should be get user by id', () => {
+    it('Throw an error when dont found user by id', async () => {
+      const paramId = 2;
+
+      const usersServiceSpyOnGetUserById = jest
+        .spyOn(service, 'findUserById')
+        .mockImplementation(() => null);
+
+      try {
+        await controller.getUserById(paramId);
+      } catch (error) {
+        expect(error).toBeInstanceOf(NotFoundException);
+
+        expect(error.message).toBe('User not found');
+
+        expect(usersServiceSpyOnGetUserById).toHaveBeenCalledWith(paramId);
+      }
+    });
+
+    it('Throw an user when found user', () => {
+      const idCorrect = 1;
+
+      const user = new UserEntity();
+
+      const usersServicesSpyOnGetUserById = jest
+        .spyOn(service, 'findUserById')
+        .mockImplementation(() => user);
+
+      expect(controller.getUserById(idCorrect)).toMatchObject(user);
+
+      expect(usersServicesSpyOnGetUserById).toHaveBeenCalled();
     });
   });
 
-  describe('Get an user', () => {
+  describe('Get an user by username', () => {
     it('get an user by username', () => {
       const username = new UsernameDto();
       const mockUser = new UserEntity();

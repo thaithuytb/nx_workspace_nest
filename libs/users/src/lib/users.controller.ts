@@ -183,7 +183,7 @@ export class UsersController {
   getUserById(@Param('id', ParseIntPipe) id: number): User {
     const user = this.usersSerive.findUserById(id);
     if (!user) {
-      throw new NotFoundException();
+      throw new NotFoundException('User not found');
     }
     return user;
   }
