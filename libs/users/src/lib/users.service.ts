@@ -4,12 +4,67 @@ import { dataUser } from './mockData';
 import { CreateUserDto } from './dto/user-create.dto';
 import { UserEntity } from './interfaces/userEntity';
 
+import {
+  BACKWARDS,
+  END,
+  FORWARDS,
+  jsonEvent,
+  JSONEventType,
+  START,
+  StreamNotFoundError,
+} from '@eventstore/db-client';
+import { client as eventStore } from './event-store';
+
+type CreateUserEvent = JSONEventType<
+  'create-event',
+  {
+    username: string;
+    password: string;
+  }
+>;
+type UpdateUserEvent = JSONEventType<
+  'update-event',
+  {
+    username: string;
+    password: string;
+  }
+>;
+
 @Injectable()
 export class UsersService {
   readonly users: User[] = [...dataUser];
 
-  findUserByUsername(username: string): User {
-    return this.users.find((user) => user.username === username);
+  async findUserByUsername(username: string): Promise<User | null> {
+    let user: User = new UserEntity();
+
+    const updateEvents = eventStore.readStream<UpdateUserEvent>(username, {
+      direction: BACKWARDS,
+      fromRevision: END,
+      maxCount: 100,
+    });
+    try {
+      for await (const { event } of updateEvents) {
+        user = event.data as User;
+        return user;
+      }
+    } catch (error) {
+      try {
+        const createUserEvents = eventStore.readStream<CreateUserEvent>(
+          username,
+          {
+            direction: BACKWARDS,
+            fromRevision: END,
+            maxCount: 100,
+          }
+        );
+        for await (const { event } of createUserEvents) {
+          user = event.data as User;
+          return user;
+        }
+      } catch (error) {
+        return null;
+      }
+    }
   }
 
   deleteUserByUsername(username: string): User | null {
@@ -25,29 +80,40 @@ export class UsersService {
     return this.users.find((user) => user.id === id);
   }
 
-  createUser(createUserDto: CreateUserDto): User | null {
-    const checkUser = this.users.find(
-      (user) => user.username === createUserDto.username
-    );
+  async createUser(createUserDto: CreateUserDto): Promise<User | null> {
+    const checkUser = await this.findUserByUsername(createUserDto.username);
+    const createUserEvent = jsonEvent<CreateUserEvent>({
+      type: 'create-event',
+      data: {
+        username: createUserDto.username,
+        password: createUserDto.password,
+      },
+    });
     if (!checkUser) {
-      const newUser = new UserEntity();
-      newUser.username = createUserDto.username;
-      newUser.password = createUserDto.password;
-      this.users.push({
-        ...newUser,
-      });
-      return newUser;
+      await eventStore.appendToStream(createUserDto.username, [
+        createUserEvent,
+      ]);
+      return createUserDto as User;
     }
     return null;
   }
 
-  updateUser(username: string, updateUser: CreateUserDto): User | null {
-    const checkUser = this.users.find((user) => user.username === username);
-    if (checkUser) {
-      const updateUserIndex = this.users.indexOf(checkUser);
-      this.users[updateUserIndex] = updateUser as User;
-      return updateUser as User;
+  async updateUser(
+    username: string,
+    updateUser: CreateUserDto
+  ): Promise<User | null> {
+    const checkUser = await this.findUserByUsername(username);
+    const updateUserEvent = jsonEvent<UpdateUserEvent>({
+      type: 'update-event',
+      data: {
+        username: updateUser.username,
+        password: updateUser.password,
+      },
+    });
+    if (!checkUser) {
+      return null;
     }
-    return null;
+    await eventStore.appendToStream(username, [updateUserEvent]);
+    return updateUser as User;
   }
 }

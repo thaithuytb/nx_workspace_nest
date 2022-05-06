@@ -75,8 +75,8 @@ export class UsersController {
     description: 'User not found',
   })
   @Get(':username')
-  getUserByUsername(@Param() params: UsernameDto): User {
-    const user = this.usersSerive.findUserByUsername(params.username);
+  async getUserByUsername(@Param() params: UsernameDto): Promise<User> {
+    const user = await this.usersSerive.findUserByUsername(params.username);
     if (!user) {
       throw new NotFoundException();
     }
@@ -88,7 +88,7 @@ export class UsersController {
   })
   @ApiParam({
     name: 'username',
-    type: UsernameDto,
+    type: String,
     description: 'Name that needs to be updated',
   })
   @ApiBody({
@@ -105,8 +105,11 @@ export class UsersController {
     description: 'User not found',
   })
   @Put(':username')
-  putUserByUsername(@Body() body: CreateUserDto, @Param() username) {
-    const user = this.usersSerive.updateUser(username, body);
+  async putUserByUsername(
+    @Body() body: CreateUserDto,
+    @Param('username') username: string
+  ) {
+    const user = await this.usersSerive.updateUser(username, body);
     if (!user) {
       throw new NotFoundException();
     }
@@ -155,8 +158,8 @@ export class UsersController {
     type: ApiResponse,
   })
   @Post()
-  createUser(@Body() createUserDto: CreateUserDto): User {
-    const createUser = this.usersSerive.createUser(createUserDto);
+  async createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
+    const createUser = await this.usersSerive.createUser(createUserDto);
     if (!createUser) {
       throw new BadRequestException('Invalid user supplied');
     }
