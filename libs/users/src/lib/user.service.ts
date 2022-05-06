@@ -1,18 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { User } from './interfaces/user.interface';
 import { dataUser } from './mockData';
 import { CreateUserDto } from './dto/user-create.dto';
-import { UserEntity } from './interfaces/userEntity';
+import { User } from './interfaces/user.interface';
 
 @Injectable()
-export class UsersService {
+export class UserService {
   readonly users: User[] = [...dataUser];
-
-  findUserByUsername(username: string): User {
-    return this.users.find((user) => user.username === username);
+  //--------------GET USER ----------------//
+  getUser( username?: string, id?: string): User {
+    if(!id) return this.users.find((user) => user.username === username) ;
+    if (!username) return this.users.find((user) => user.id === +id);
+    return this.users.find((user) => (user.id === +id && user.username === username));
   }
-
-  deleteUserByUsername(username: string): User | null {
+  //--------------DELETE USER ----------------//
+  deleteUser(username: string): User | null {
     const checkUser = this.users.find((user) => user.username === username);
     if (checkUser) {
       this.users.splice(checkUser.id, 1);
@@ -20,33 +21,28 @@ export class UsersService {
     }
     return null;
   }
-
-  findUserById(id: number): User {
-    return this.users.find((user) => user.id === id);
-  }
-
+  //--------------CREATE USER ----------------//
   createUser(createUserDto: CreateUserDto): User | null {
     const checkUser = this.users.find(
       (user) => user.username === createUserDto.username
     );
     if (!checkUser) {
-      const newUser = new UserEntity();
-      newUser.username = createUserDto.username;
-      newUser.password = createUserDto.password;
-      this.users.push({
-        ...newUser,
-      });
+      const newUser = {
+        ...createUserDto,
+        id: this.users.length
+      };
+      this.users.push(newUser);
       return newUser;
     }
     return null;
   }
-
+  //--------------UPDATE USER ----------------//
   updateUser(username: string, updateUser: CreateUserDto): User | null {
     const checkUser = this.users.find((user) => user.username === username);
     if (checkUser) {
       const updateUserIndex = this.users.indexOf(checkUser);
-      this.users[updateUserIndex] = updateUser as User;
-      return updateUser as User;
+      this.users[updateUserIndex] = {...checkUser, ...updateUser};
+      return {...checkUser, ...updateUser};
     }
     return null;
   }

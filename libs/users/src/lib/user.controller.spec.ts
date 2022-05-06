@@ -6,9 +6,9 @@ import {
 import { Test } from '@nestjs/testing';
 import { CreateUserDto } from './dto/user-create.dto';
 import { UserEntity } from './interfaces/userEntity';
-import { UsersController } from './users.controller';
-import { UsersService } from './users.service';
-import { UsernameDto } from './dto/username-param.dto';
+import { UsersController } from './user.controller';
+import { UsersService } from './user.service';
+import { UsernameDto } from './dto/user-paramUserByUsername';
 
 describe('UsersController', () => {
   //setup
@@ -139,12 +139,12 @@ describe('UsersController', () => {
         .spyOn(service, 'updateUser')
         .mockImplementation(() => mockUser);
 
-      controller.putUserByUsername(updateUserDto, username);
+      controller.updateUser(updateUserDto, username);
       expect(userServiceUpdateUserByUsernameSpy).toBeCalledWith(
         username,
         updateUserDto
       );
-      expect(controller.putUserByUsername(updateUserDto, username)).toBe(
+      expect(controller.updateUser(updateUserDto, username)).toBe(
         mockUser
       );
     });
@@ -156,7 +156,7 @@ describe('UsersController', () => {
         .mockImplementation(() => null);
 
       try {
-        controller.putUserByUsername(updateUserDto, username);
+        controller.updateUser(updateUserDto, username);
         expect(userServiceUpdateUserByUsernameSpy).toBeCalledWith(
           updateUserDto,
           username
@@ -178,9 +178,9 @@ describe('UsersController', () => {
         .spyOn(service, 'deleteUserByUsername')
         .mockImplementation(() => mockUser);
 
-      controller.deleteUserByUsername(username);
+      controller.deleteUser(username);
       expect(userServiceDeleteUserByUsernameSpy).toBeCalledWith(username);
-      expect(controller.deleteUserByUsername(username)).toBe(HttpStatus.OK);
+      expect(controller.deleteUser(username)).toBe(HttpStatus.OK);
     });
     it('Throw an exeption if the username provided is not found', () => {
       const username = 'user123abc';
@@ -190,7 +190,7 @@ describe('UsersController', () => {
         .mockImplementation(() => null);
 
       try {
-        controller.deleteUserByUsername(username);
+        controller.deleteUser(username);
         expect(userServiceDeleteUserByUsernameSpy).toBeCalledWith(username);
       } catch (error) {
         expect(error).toBeInstanceOf(NotFoundException);
