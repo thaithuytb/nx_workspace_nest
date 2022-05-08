@@ -27,9 +27,12 @@ import { UsernameDto } from './dto/user-paramUserByUsername';
 import { ApiResponse } from './interfaces/apiResponse';
 import { CreateUserDto } from './dto/user-create.dto';
 
-@Controller('user')
+@Controller({
+  path: 'user',
+  version: 'v1'
+})
 @ApiTags('user')
-export class UsersController {
+export class UserController {
   constructor(private userService: UserService) {}
   //----------------GET USER ( username or id ) ----------------------
   @ApiOperation({
@@ -49,7 +52,7 @@ export class UsersController {
   })
   @ApiOkResponse({
     description: 'Successful operation',
-    type: String,
+    type: User,
   })
   @ApiBadRequestResponse({
     description: 'Invalid username or ID supplied',

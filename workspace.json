@@ -4,7 +4,8 @@
     "apartment-manager-api": "apps/apartment-manager/api",
     "pet": "libs/pet",
     "petstore": "apps/petstore",
-    "rooms": "libs/rooms",
-    "users": "libs/users"
+    "room": "libs/room",
+    "user": "libs/user",
+    "userV2": "libs/userV2"
   }
 }

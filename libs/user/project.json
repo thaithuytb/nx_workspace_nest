@@ -1,20 +1,20 @@
 {
-  "root": "libs/pet",
-  "sourceRoot": "libs/pet/src",
+  "root": "libs/user",
+  "sourceRoot": "libs/user/src",
   "projectType": "library",
   "targets": {
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["libs/pet/**/*.ts"]
+        "lintFilePatterns": ["libs/user/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/libs/pet"],
+      "outputs": ["coverage/libs/user"],
       "options": {
-        "jestConfig": "libs/pet/jest.config.js",
+        "jestConfig": "libs/user/jest.config.js",
         "passWithNoTests": true
       }
     }

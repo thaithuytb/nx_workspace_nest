@@ -16,8 +16,9 @@
     "baseUrl": ".",
     "paths": {
       "@aichi/pet": ["libs/pet/src/index.ts"],
-      "@aichi/rooms": ["libs/rooms/src/index.ts"],
-      "@aichi/users": ["libs/users/src/index.ts"]
+      "@aichi/room": ["libs/room/src/index.ts"],
+      "@aichi/user": ["libs/user/src/index.ts"],
+      "@aichi/userV2": ["libs/userV2/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

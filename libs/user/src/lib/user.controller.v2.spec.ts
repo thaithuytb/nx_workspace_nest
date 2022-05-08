@@ -2,7 +2,7 @@ import * as request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { UsersModule } from './user.module';
-import { UsersController } from './user.controller';
+import { UserController } from './user.controller';
 
 describe('Users', () => {
   let app: INestApplication;
@@ -10,7 +10,7 @@ describe('Users', () => {
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [UsersModule],
-      controllers: [UsersController]
+      controllers: [UserController]
     }).compile();
 
     app = moduleRef.createNestApplication();
