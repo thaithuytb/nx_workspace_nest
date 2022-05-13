@@ -9,7 +9,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import { SwaggerModule } from '@nestjs/swagger';
 import { DocumentBuilder } from '@nestjs/swagger';
-import { connect as connectToEventStore } from '@aichi/users';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const globalPrefix = 'api';
@@ -29,7 +29,7 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, petDocument);
 
   // EventStore
-  await connectToEventStore();
+  // await connectToEventStore();
   //validator and transformer
 
   app.useGlobalPipes(
