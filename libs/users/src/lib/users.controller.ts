@@ -28,6 +28,7 @@ import { UserEntity } from './interfaces/userEntity';
 import { UsernameDto } from './dto/username-param.dto';
 import { ApiResponse } from './interfaces/apiResponse';
 import { CreateUserDto } from './dto/user-create.dto';
+import { UpdateUserDto } from './dto/user-update.dto';
 
 @Controller('user')
 @ApiTags('user')
@@ -93,7 +94,7 @@ export class UsersController {
   })
   @ApiBody({
     description: 'User object for update',
-    type: CreateUserDto,
+    type: UpdateUserDto,
   })
   @ApiOkResponse({
     description: 'Updated user data',
@@ -106,7 +107,7 @@ export class UsersController {
   })
   @Put(':username')
   async putUserByUsername(
-    @Body() body: CreateUserDto,
+    @Body() body: UpdateUserDto,
     @Param('username') username: string
   ) {
     const user = await this.usersSerive.updateUser(username, body);

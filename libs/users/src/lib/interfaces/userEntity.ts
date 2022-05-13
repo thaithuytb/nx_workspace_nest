@@ -1,17 +1,17 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class UserEntity {
   @ApiProperty()
   id: number;
 
   @ApiProperty()
-  username:	string;
+  username: string;
 
   @ApiProperty()
   firstName: string = null;
 
   @ApiProperty()
-  lastName:	string = null;
+  lastName: string = null;
 
   @ApiProperty()
   email: string = null;
