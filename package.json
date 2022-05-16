@@ -22,6 +22,7 @@
     "tslib": "^2.0.0"
   },
   "devDependencies": {
+    "@nestjs/mongoose": "^9.0.3",
     "@nestjs/schematics": "^8.0.0",
     "@nestjs/testing": "^8.0.0",
     "@nrwl/cli": "13.10.2",
@@ -38,6 +39,7 @@
     "eslint": "~8.12.0",
     "eslint-config-prettier": "8.1.0",
     "jest": "27.2.3",
+    "mongoose": "^6.3.3",
     "nx": "13.10.2",
     "prettier": "^2.5.1",
     "ts-jest": "27.0.5",

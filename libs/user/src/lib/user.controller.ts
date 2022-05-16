@@ -22,10 +22,10 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { User } from './interfaces/user.interface';
 import { UsernameDto } from './dto/user-paramUserByUsername';
 import { ApiResponse } from './interfaces/apiResponse';
 import { CreateUserDto } from './dto/user-create.dto';
+import { User } from './schemas/schema.user';
 
 @Controller({
   path: 'user',
@@ -52,7 +52,7 @@ export class UserController {
   })
   @ApiOkResponse({
     description: 'Successful operation',
-    type: User,
+    type: User
   })
   @ApiBadRequestResponse({
     description: 'Invalid username or ID supplied',
@@ -61,17 +61,17 @@ export class UserController {
     description: 'User not found',
   })
   @Get()
-  getUser(@Query('username') username?: string, @Query('id') id?: string) {
+  async getUser(@Query('username') username?: string, @Query('id') id?: string) {
     if (!username && !id) {
       throw new BadRequestException('Username or ID is obligatory !!!');
     }
-    const user = this.userService.getUser( username, id);
-    if (!user) {
-      throw new NotFoundException();
-    }
-    return user;
+      const user = await this.userService.getUser(username, id);
+      if (!user) {
+        throw new NotFoundException();
+      }
+      return user;
   }
-  //----------------UPDATE USER ----------------------
+  // //----------------UPDATE USER ----------------------
   @ApiOperation({
     summary: 'Update user',
   })
@@ -95,14 +95,14 @@ export class UserController {
     description: 'User not found',
   })
   @Put(':username')
-  updateUser(@Body() body: CreateUserDto, @Param() params: UsernameDto) {
-    const user = this.userService.updateUser(params.username, body);
+  async updateUser(@Body() body: CreateUserDto, @Param() params: UsernameDto) {
+    const user = await this.userService.updateUser(params.username, body);
     if (!user) {
       throw new NotFoundException();
     }
     return user;
   }
-  //----------------DELETE USER----------------------
+  // //----------------DELETE USER----------------------
   @ApiOperation({
     summary: 'Delete user by username',
   })
@@ -121,8 +121,8 @@ export class UserController {
     description: 'User not found',
   })
   @Delete(':username')
-  deleteUser(@Param() params: UsernameDto) {
-    const user = this.userService.deleteUser(params.username);
+  async deleteUser(@Param() params: UsernameDto) {
+    const user = await this.userService.deleteUser(params.username);
     if (!user) {
       throw new NotFoundException();
     }
@@ -130,7 +130,7 @@ export class UserController {
       delete: true
     };
   }
-  //----------------CREATE USER ----------------------
+  // //----------------CREATE USER ----------------------
   @ApiOperation({
     summary: 'Create an user',
   })
@@ -147,8 +147,8 @@ export class UserController {
     type: ApiResponse,
   })
   @Post()
-  createUser(@Body() createUserDto: CreateUserDto): User {
-    const createUser = this.userService.createUser(createUserDto);
+  async createUser(@Body() createUserDto: CreateUserDto) {
+    const createUser = await this.userService.createUser(createUserDto);
     if (!createUser) {
       throw new BadRequestException('Invalid user supplied');
     }

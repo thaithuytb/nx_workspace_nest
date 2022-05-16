@@ -3,29 +3,46 @@
  * This is only a minimal backend to get started.
  */
 
-import { Logger } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+ import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
+ import { NestFactory } from '@nestjs/core';
 
-import { AppModule } from './app/app.module';
+ import { AppModule } from './app/app.module';
+ import { SwaggerModule } from '@nestjs/swagger';
+ import { DocumentBuilder } from '@nestjs/swagger';
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  const globalPrefix = 'api';
-  app.setGlobalPrefix(globalPrefix);
-  const port = process.env.PORT || 3333;
-  const config = new DocumentBuilder()
-  .setTitle('Cats example')
-  .setDescription('The cats API description')
-  .setVersion('1.0')
-  .addTag('cats')
-  .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
-  await app.listen(port);
-  Logger.log(
-    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
-  );
-}
+ async function bootstrap() {
+   const app = await NestFactory.create(AppModule);
+    //nest version
+    app.enableVersioning({
+     type: VersioningType.URI,
+     // defaultVersion: ['v1', 'v2'],
+     prefix: '' //default v
 
-bootstrap();
+   });
+   const globalPrefix = 'api';
+   app.setGlobalPrefix(globalPrefix);
+   app.useGlobalPipes(new ValidationPipe());
+
+   const port = process.env.PORT || 3999;
+
+   // swagger
+   const firstOptions = new DocumentBuilder()
+   .setTitle('APARTMENT MANAGER')
+   .setDescription('apartment')
+   .setVersion('1.0')
+   .build();
+   const petDocument = SwaggerModule.createDocument(app, firstOptions);
+   SwaggerModule.setup('api', app, petDocument);
+
+   //validator and transformer
+   app.useGlobalPipes(new ValidationPipe({
+     // transform: true
+   }))
+
+   await app.listen(port);
+   Logger.log(
+     `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
+   );
+ }
+
+ bootstrap();

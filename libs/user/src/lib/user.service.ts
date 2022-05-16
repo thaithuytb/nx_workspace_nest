@@ -1,49 +1,49 @@
 import { Injectable } from '@nestjs/common';
-import { dataUser } from './mockData';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/user-create.dto';
-import { User } from './interfaces/user.interface';
+import { User, UserDocument } from './schemas/schema.user';
 
 @Injectable()
 export class UserService {
-  readonly users: User[] = [...dataUser];
+  //inject model
+  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
   //--------------GET USER ----------------//
-  getUser( username?: string, id?: string): User {
-    if(!id) return this.users.find((user) => user.username === username) ;
-    if (!username) return this.users.find((user) => user.id === +id);
-    return this.users.find((user) => (user.id === +id && user.username === username));
+  async getUser( username: string, id: string): Promise<User> {
+    try {
+      if(!id) return await this.userModel.findOne({username});
+      if (!username) return await this.userModel.findById({_id: id});
+      return await this.userModel.findOne().and([{username}, {_id: id}]);
+    } catch (error) {
+      console.log(error.message);
+    }
   }
   //--------------DELETE USER ----------------//
-  deleteUser(username: string): User | null {
-    const checkUser = this.users.find((user) => user.username === username);
-    if (checkUser) {
-      this.users.splice(checkUser.id, 1);
-      return checkUser;
+  async deleteUser(username: string): Promise<User> {
+    try {
+      return await this.userModel.findOneAndDelete({username});
+    } catch (error) {
+      console.log(error.message);
     }
-    return null;
   }
   //--------------CREATE USER ----------------//
-  createUser(createUserDto: CreateUserDto): User | null {
-    const checkUser = this.users.find(
-      (user) => user.username === createUserDto.username
-    );
-    if (!checkUser) {
-      const newUser = {
-        ...createUserDto,
-        id: this.users.length
-      };
-      this.users.push(newUser);
-      return newUser;
+   async createUser(createUserDto: CreateUserDto): Promise<User> {
+    try {
+      const checkUser = await this.userModel.findOne({username: createUserDto.username});
+      if(!checkUser) {
+        const newUser = new this.userModel(createUserDto)
+        return newUser.save();
+      }
+    } catch (error) {
+      console.log(error.message);
     }
-    return null;
   }
   //--------------UPDATE USER ----------------//
-  updateUser(username: string, updateUser: CreateUserDto): User | null {
-    const checkUser = this.users.find((user) => user.username === username);
-    if (checkUser) {
-      const updateUserIndex = this.users.indexOf(checkUser);
-      this.users[updateUserIndex] = {...checkUser, ...updateUser};
-      return {...checkUser, ...updateUser};
+  async updateUser(username: string, userUpdate: CreateUserDto): Promise<User> {
+    try {
+      return await this.userModel.findOneAndUpdate({username}, userUpdate, {new: true});
+    } catch (error) {
+      console.log(error.message);
     }
-    return null;
   }
 }
