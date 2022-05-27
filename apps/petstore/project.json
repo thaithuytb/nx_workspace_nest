@@ -3,14 +3,29 @@
   "sourceRoot": "apps/petstore/src",
   "projectType": "application",
   "targets": {
+    "deploy": {
+      "builder": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          "nx build petstore",
+          "docker build -f ./apps/petstore/Dockerfile . -t petstore"
+        ],
+        "parallel": false
+      }
+    },
     "build": {
       "executor": "@nrwl/node:webpack",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/apps/petstore",
         "main": "apps/petstore/src/main.ts",
         "tsConfig": "apps/petstore/tsconfig.app.json",
-        "assets": ["apps/petstore/src/assets"]
+        "assets": [
+          "apps/petstore/src/assets"
+        ],
+        "generatePackageJson": true
       },
       "configurations": {
         "production": {
@@ -34,14 +49,20 @@
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
-        "lintFilePatterns": ["apps/petstore/**/*.ts"]
+        "lintFilePatterns": [
+          "apps/petstore/**/*.ts"
+        ]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/apps/petstore"],
+      "outputs": [
+        "coverage/apps/petstore"
+      ],
       "options": {
         "jestConfig": "apps/petstore/jest.config.js",
         "passWithNoTests": true

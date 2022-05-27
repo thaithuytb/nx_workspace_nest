@@ -22,6 +22,14 @@ services:
       - type: volume
         source: eventstore-volume-logs
         target: /c/data/eventstore/logs
+  petstore:
+    image: petstore
+    ports:
+      - '8081:3331'
+  apartment-manager-api:
+    image: apartment-manager-api
+    ports:
+      - '8082:3332'
 volumes:
   eventstore-volume-data:
   eventstore-volume-logs:

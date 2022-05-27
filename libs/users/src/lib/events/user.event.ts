@@ -1,14 +1,6 @@
 import { JSONEventType } from '@eventstore/db-client';
 import { User } from './../interfaces/user.interface';
 
-export type UserCreated = JSONEventType<
-  'user-created',
-  {
-    username: string;
-    password: string;
-  }
->;
-
 export type UserUpdated = JSONEventType<
   'user-updated',
   {
@@ -21,6 +13,15 @@ export type UserUpdated = JSONEventType<
     userStatus: number;
   }
 >;
+
+export type UserCreated = JSONEventType<
+  'user-created',
+  {
+    username: string;
+    password: string;
+  }
+>;
+
 export type UserPasswordUpdated = JSONEventType<
   'user-password-updated',
   {

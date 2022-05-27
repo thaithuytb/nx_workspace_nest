@@ -33,6 +33,10 @@ import { json } from 'stream/consumers';
 export class UsersService {
   /**
    *
+   * - Overloading TS
+   * - Partial keyword
+   * - Đóng gói nodejs trên container
+   * - Dockerhub
    */
   constructor(
     @Inject('EVENT_STORE_CLIENT') private eventStore: EventStoreDBClient
